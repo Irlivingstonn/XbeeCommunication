@@ -6,9 +6,9 @@ import serial
 import sys
 import binascii
 
-# User Data <-- make sure to change
+# User Data <-- make sure to change when using
 com_port = 'COM1'
-dest_64bit = '0013A20040762859'
+dest_64bit = '13A200422DBACE'
 dest_16bit = 'FFFE'
 
 
