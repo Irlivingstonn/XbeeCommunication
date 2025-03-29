@@ -8,7 +8,7 @@ import binascii
 
 # User Data <-- make sure to change when using
 com_port = 'COM1'
-dest_64bit = '13A200422DBACE'
+dest_64bit = '0013A200422DBACE'
 dest_16bit = 'FFFE'
 
 
