@@ -44,8 +44,10 @@ rf_hex = binascii.hexlify(rf_data)
 ##print "rf_hex=", rf_hex
 
 
+
+
 ## calculate packet length
-hex_len = hex(14 + (len(rf_hex)/2))
+hex_len = hex(14 + (len(int(round(rf_hex)))/2))
 hex_len = hex_len.replace('x','0')
 ##print "hex_len=", hex_len
 
