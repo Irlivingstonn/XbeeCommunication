@@ -5,6 +5,7 @@
 import serial
 import sys
 import binascii
+import math       
 
 # User Data <-- make sure to change when using
 com_port = 'COM1'
@@ -43,11 +44,11 @@ ser = serial.Serial(com_port, 9600, timeout=0.1, rtscts=True)
 rf_hex = binascii.hexlify(rf_data)
 ##print "rf_hex=", rf_hex
 
-
+ceil_value  = math.ceil(rf_hex)
 
 
 ## calculate packet length
-hex_len = hex(14 + (len(int(round(rf_hex)))/2))
+hex_len = hex(14 + (len(ceil_value))/2)
 hex_len = hex_len.replace('x','0')
 ##print "hex_len=", hex_len
 
