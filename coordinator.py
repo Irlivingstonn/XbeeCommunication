@@ -9,9 +9,10 @@ import sys
 import binascii
 import math  
 import time  
+import os
 
 # XBee device configuration
-PORT = "/dev/ttyUSB1"  # Change to your port
+PORT = "/dev/ttyUSB0"  # Change to your port
 BAUD_RATE = 9600
 
 # User Data <-- make sure to change when using
@@ -20,7 +21,7 @@ dest_64bit = '0013A200422DBACE'
 dest_16bit = 'FFFE'
 
 # Covert png to hex
-IMAGE_FILE = 'death_star.png'
+IMAGE_FILE = 'image9.png'
 
 # Maximum bytes per packet (XBee has limits)
 MAX_BYTES_PER_PACKET = 72
@@ -43,10 +44,13 @@ def main():
         print(f"Connected to local XBee device: {device.get_64bit_addr()}")
 
         REMOTE_64BIT_ADDR = device.get_64bit_addr() # Gets the device address
+        REMOTE_64BIT_ADDR = device.get_64bit_addr() # Gets the device address
 
         # Get the remote device
-        remote_device = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string(REMOTE_64BIT_ADDR))
-        
+        remote_device = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string(str(REMOTE_64BIT_ADDR)))
+        file_size = os.path.getsize(IMAGE_FILE)
+        print(f"Image size: {file_size} bytes")
+
         # Read the image file
         with open(IMAGE_FILE, 'rb') as f:
             image_data = f.read()
