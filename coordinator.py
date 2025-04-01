@@ -2,10 +2,14 @@
 # https://www.digi.com/resources/documentation/digidocs/90001537/references/r_xbee_api_packets.htm?TocPath=Categories%7CCode%20Samples%7C_____44
 
 # Imports
+from digi.xbee.devices import XBeeDevice
 import serial
 import sys
 import binascii
 import math       
+
+device = XBeeDevice("COM8", 9600) # <-- Change port
+
 
 # User Data <-- make sure to change when using
 com_port = 'COM1'
@@ -80,19 +84,27 @@ print("Tx packet = ", tx_req)
 ## convert packet from hex to binary
 data = binascii.unhexlify(tx_req)
 
+
+
+
+device.open()
+
+
+
 ## send data on serial line to module
-ser.write(data)
+# ser.write(data)
+device.send_data_broadcast(data)
 
 ## listin COM port for response
-resp = ser.readline()
-
-## convert response from binary to int
-resp = b_u(resp)
-
-## convert response from int to hex
-resp = '%x' % resp
-hex_data = resp.upper()
-print("Response (in hex) = ", hex_data)
+# resp = ser.readline()
+# 
+# ## convert response from binary to int
+# resp = b_u(resp)
+# 
+# ## convert response from int to hex
+# resp = '%x' % resp
+# hex_data = resp.upper()
+# print("Response (in hex) = ", hex_data)
 
 ## close connection
 ser.close()
