@@ -4,6 +4,7 @@
 # Imports
 from digi.xbee.devices import XBeeDevice, RemoteXBeeDevice
 from digi.xbee.models.address import XBee64BitAddress
+
 import serial
 import sys
 import binascii
@@ -15,10 +16,15 @@ import os
 PORT = "/dev/ttyUSB0"  # Change to your port
 BAUD_RATE = 9600
 
-# User Data <-- make sure to change when using
+# Coordinator configuration
 com_port = 'COM1'
-dest_64bit = '0013A200422DBACE'
+dest_64bit = '0013A200407E6DE6'
 dest_16bit = 'FFFE'
+
+# Reciever configuration
+reciever_port = '/dev/ttyUSB0'
+reciever_64bit = '0013A200422DBACE'
+reciever_16bit = 'FFFE'
 
 # Covert png to hex
 IMAGE_FILE = 'image9.png'
@@ -43,9 +49,12 @@ def main():
         # Open the device
         device.open()
         print(f"Connected to local XBee device: {device.get_64bit_addr()}")
+       
 
         # Get the remote device
-        remote_device = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string(str(device.get_64bit_addr())))
+        remote_device = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string(reciever_64bit))
+
+        print(f"Remote device: {remote_device.get_64bit_addr()}")
         
         file_size = os.path.getsize(IMAGE_FILE)
         print(f"Image size: {file_size} bytes")
@@ -69,7 +78,7 @@ def main():
             # Send the data chunk
             print(f"Sending packet {i//MAX_BYTES_PER_PACKET + 1}/{num_packets} ({len(chunk)} bytes)")
             #device.send_data_broadcast(chunk)
-            device._send_data_64_16(remote_device, chunk)
+            device.send_data(remote_device, chunk)
             
 
             delay = min(0.05, 0.01 + (len(chunk) / 5000))
