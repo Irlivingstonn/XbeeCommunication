@@ -7,7 +7,8 @@ from digi.xbee.models.address import XBee64BitAddress
 import serial
 import sys
 import binascii
-import math    
+import math  
+import time  
 
 # XBee device configuration
 PORT = "/dev/ttyUSB1"  # Change to your port
@@ -41,34 +42,33 @@ def main():
         device.open()
         print(f"Connected to local XBee device: {device.get_64bit_addr()}")
 
+        REMOTE_64BIT_ADDR = device.get_64bit_addr() # Gets the device address
 
-
-        # # Get the remote device
-        # remote_device = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string(REMOTE_64BIT_ADDR))
-        # 
-        # # Read the image file
-        # with open(IMAGE_FILE, 'rb') as f:
-        #     image_data = f.read()
-        # 
-        # total_size = len(image_data)
-        # print(f"Image size: {total_size} bytes")
-        # 
-        # # Calculate number of packets needed
-        # num_packets = (total_size + MAX_BYTES_PER_PACKET - 1) // MAX_BYTES_PER_PACKET
-        # print(f"Sending image in {num_packets} packets...")
-        # 
-        # # Send image in chunks
-        # for i in range(0, total_size, MAX_BYTES_PER_PACKET):
-        #     # Get chunk of data
-        #     chunk = image_data[i:i+MAX_BYTES_PER_PACKET]
-        #     
-        #     # Send the data chunk
-        #     print(f"Sending packet {i//MAX_BYTES_PER_PACKET + 1}/{num_packets} ({len(chunk)} bytes)")
-        #     device.send_data(remote_device, chunk)
-        #     
-        #     # Small delay to prevent overwhelming the receiver
-        #     time.sleep(0.1)
-# 
+        # Get the remote device
+        remote_device = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string(REMOTE_64BIT_ADDR))
+        
+        # Read the image file
+        with open(IMAGE_FILE, 'rb') as f:
+            image_data = f.read()
+        
+        total_size = len(image_data)
+        print(f"Image size: {total_size} bytes")
+        
+        # Calculate number of packets needed
+        num_packets = (total_size + MAX_BYTES_PER_PACKET - 1) // MAX_BYTES_PER_PACKET
+        print(f"Sending image in {num_packets} packets...")
+        
+        # Send image in chunks
+        for i in range(0, total_size, MAX_BYTES_PER_PACKET):
+            # Get chunk of data
+            chunk = image_data[i:i+MAX_BYTES_PER_PACKET]
+            
+            # Send the data chunk
+            print(f"Sending packet {i//MAX_BYTES_PER_PACKET + 1}/{num_packets} ({len(chunk)} bytes)")
+            device.send_data(remote_device, chunk)
+            
+            # Small delay to prevent overwhelming the receiver
+            time.sleep(0.1)
 
 
         device.close()
