@@ -22,9 +22,10 @@ dest_16bit = 'FFFE'
 
 # Covert png to hex
 IMAGE_FILE = 'image9.png'
+IMAGE_FILE = 'image9.png'
 
 # Maximum bytes per packet (XBee has limits)
-MAX_BYTES_PER_PACKET = 72
+MAX_BYTES_PER_PACKET = 128
 
 
 
@@ -43,11 +44,9 @@ def main():
         device.open()
         print(f"Connected to local XBee device: {device.get_64bit_addr()}")
 
-        REMOTE_64BIT_ADDR = device.get_64bit_addr() # Gets the device address
-        REMOTE_64BIT_ADDR = device.get_64bit_addr() # Gets the device address
-
         # Get the remote device
-        remote_device = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string(str(REMOTE_64BIT_ADDR)))
+        remote_device = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string(str(device.get_64bit_addr())))
+        
         file_size = os.path.getsize(IMAGE_FILE)
         print(f"Image size: {file_size} bytes")
 
@@ -69,7 +68,15 @@ def main():
             
             # Send the data chunk
             print(f"Sending packet {i//MAX_BYTES_PER_PACKET + 1}/{num_packets} ({len(chunk)} bytes)")
-            device.send_data(remote_device, chunk)
+            #device.send_data_broadcast(chunk)
+            device._send_data_64_16(remote_device, chunk)
+            
+
+            delay = min(0.05, 0.01 + (len(chunk) / 5000))
+            time.sleep(delay)
+
+
+            
             
             # Small delay to prevent overwhelming the receiver
             time.sleep(0.1)
