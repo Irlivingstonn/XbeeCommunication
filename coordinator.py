@@ -25,7 +25,7 @@ IMAGE_FILE = 'image9.png'
 IMAGE_FILE = 'image9.png'
 
 # Maximum bytes per packet (XBee has limits)
-MAX_BYTES_PER_PACKET = 128
+MAX_BYTES_PER_PACKET = 72
 
 
 
